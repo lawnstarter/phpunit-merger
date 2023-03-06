@@ -1,5 +1,5 @@
 {
-    "name": "lawnstarter/phpunit-merger",
+    "name": "Nimut/phpunit-merger",
     "description": "Merge multiple PHPUnit reports into one file",
     "keywords": [
         "PHPUnit",
@@ -7,7 +7,7 @@
         "SonarQube",
         "TYPO3 CMS"
     ],
-    "homepage": "https://github.com/lawnstarter/phpunit-merger",
+    "homepage": "https://github.com/Nimut/phpunit-merger",
     "license": [
         "GPL-2.0+"
     ],
