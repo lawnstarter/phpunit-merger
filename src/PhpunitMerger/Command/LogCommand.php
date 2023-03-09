@@ -22,6 +22,10 @@ class LogCommand extends Command
      */
     private $domElements = [];
 
+    private $metaAttributes = ['name', 'file'];
+
+    private $numericAttributes = ['errors', 'warnings', 'failures', 'skipped', 'tests'];
+
     protected function configure()
     {
         $this->setName('log')
@@ -87,6 +91,7 @@ class LogCommand extends Command
                 continue;
             }
             $name = $testSuite['@attributes']['name'];
+            $isFirstRun = $parent->nodeName === 'testsuites';
 
             if (isset($this->domElements[$name])) {
                 $element = $this->domElements[$name];
@@ -94,9 +99,15 @@ class LogCommand extends Command
                 $element = $this->document->createElement('testsuite');
                 $element->setAttribute('parent', $parent->getAttribute('name'));
                 $attributes = $testSuite['@attributes'] ?? [];
+
+                $allowedAttributes = $isFirstRun ? $this->metaAttributes : array_merge($this->metaAttributes, $this->numericAttributes);
                 foreach ($attributes as $key => $value) {
-                    $value = in_array($key, ['name', 'errors', 'failures', 'skipped', 'file']) ? $value : 0;
+                    $value = in_array($key, $allowedAttributes) ? $value : 0;
                     $element->setAttribute($key, (string)$value);
+
+                    if (in_array($key, $this->numericAttributes) && $parent->nodeName === 'testsuite') {
+                        $this->addAttributeValueToTestSuite($parent, $key, $value);
+                    }
                 }
                 $parent->appendChild($element);
                 $this->domElements[$name] = $element;
