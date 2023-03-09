@@ -95,7 +95,7 @@ class LogCommand extends Command
                 $element->setAttribute('parent', $parent->getAttribute('name'));
                 $attributes = $testSuite['@attributes'] ?? [];
                 foreach ($attributes as $key => $value) {
-                    $value = in_array($key, ['name','errors','failures','skipped']) ? $value : 0;
+                    $value = in_array($key, ['name', 'errors', 'failures', 'skipped', 'file']) ? $value : 0;
                     $element->setAttribute($key, (string)$value);
                 }
                 $parent->appendChild($element);
