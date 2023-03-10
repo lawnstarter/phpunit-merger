@@ -159,9 +159,15 @@ class LogCommand extends Command
         $childTypes = ['skipped', 'failure', 'error'];
         foreach ($childTypes as $type) {
             if (isset($testCase[$type])) {
-                $child = $this->document->createElement($type);
-                $child->appendChild($this->document->createTextNode($testCase[$type]));
-                $element->appendChild($child);
+                if (!is_array($testCase[$type])) {
+                    $testCase[$type] = [$testCase[$type]];
+                }
+
+                foreach ($testCase[$type] as $child) {
+                    $childElement = $this->document->createElement($type);
+                    $childElement->appendChild($this->document->createTextNode($child));
+                    $element->appendChild($childElement);
+                }
             }
         }
     }
