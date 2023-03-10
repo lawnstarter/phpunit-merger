@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nimut\PhpunitMerger\Command;
 
+use DOMElement;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -146,8 +147,28 @@ class LogCommand extends Command
                 }
                 $this->addAttributeValueToTestSuite($parent, $key, $value);
             }
+            $this->addTestCaseChild($element, $testCase);
+
             $parent->appendChild($element);
             $this->domElements[$name] = $element;
+        }
+    }
+
+    private function addTestCaseChild(DOMElement &$element, array $testCase): void
+    {
+        $childTypes = ['skipped', 'failure', 'error'];
+        foreach ($childTypes as $type) {
+            if (isset($testCase[$type])) {
+                if (!is_array($testCase[$type])) {
+                    $testCase[$type] = [$testCase[$type]];
+                }
+
+                foreach ($testCase[$type] as $child) {
+                    $childElement = $this->document->createElement($type);
+                    $childElement->appendChild($this->document->createTextNode($child));
+                    $element->appendChild($childElement);
+                }
+            }
         }
     }
 
