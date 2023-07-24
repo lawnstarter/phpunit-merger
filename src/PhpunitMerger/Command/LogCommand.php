@@ -87,7 +87,8 @@ class LogCommand extends Command
         foreach ($testSuites as $testSuite) {
             if (empty($testSuite['@attributes']['name'])) {
                 if (!empty($testSuite['testsuite'])) {
-                    $this->addTestSuites($parent, $testSuite['testsuite']);
+                    $children = isset($testSuite['testsuite']['@attributes']) ? [$testSuite['testsuite']] : $testSuite['testsuite'];
+                    $this->addTestSuites($parent, $children);
                 }
                 continue;
             }
@@ -105,10 +106,6 @@ class LogCommand extends Command
                 foreach ($attributes as $key => $value) {
                     $value = in_array($key, $allowedAttributes) ? $value : 0;
                     $element->setAttribute($key, (string)$value);
-                    // Pass numeric attributes to parent if parent is also a testsuite
-                    if (in_array($key, $this->numericAttributes) && $parent->nodeName === 'testsuite') {
-                        $this->addAttributeValueToTestSuite($parent, $key, $value);
-                    }
                 }
                 $parent->appendChild($element);
                 $this->domElements[$name] = $element;
