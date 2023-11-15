@@ -7,7 +7,7 @@ namespace Nimut\PhpunitMerger\Tests\Command;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class AbstractCommandTest extends TestCase
+abstract class AbstractCommandTestCase extends TestCase
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ abstract class AbstractCommandTest extends TestCase
         $filesystem = new Filesystem();
         $filesystem->remove($this->logDirectory . $this->outputFile);
 
-        $this->assertFileNotExists($this->logDirectory . $this->outputFile);
+        $this->assertFileDoesNotExist($this->logDirectory . $this->outputFile);
     }
 
     public function assertOutputDirectoryNotExists()
@@ -32,6 +32,6 @@ abstract class AbstractCommandTest extends TestCase
         $filesystem = new Filesystem();
         $filesystem->remove($this->logDirectory . dirname($this->outputFile));
 
-        $this->assertDirectoryNotExists($this->logDirectory . dirname($this->outputFile));
+        $this->assertDirectoryDoesNotExist($this->logDirectory . dirname($this->outputFile));
     }
 }
